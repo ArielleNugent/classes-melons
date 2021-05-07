@@ -1,5 +1,6 @@
 """Classes for melon orders."""
 
+import random
 
 class AbstractMelonOrder():
     """An abstract base class that other melon orders inherit from."""
@@ -12,14 +13,23 @@ class AbstractMelonOrder():
         self.order_type = order_type
         self.tax = tax
 
+    def get_base_price(self):
+        """Splurge pricing."""
+        
+        base_price = random.randint(5, 9)
+
+        return base_price
+
     def get_total(self):
         """Calculate price, including tax."""
         
         if (self.species).lower() == "christmas melons":
             base_price = 7.5
         else:
-            base_price = 5
-        
+            base_price = self.get_base_price()
+
+        print(base_price)
+
         if self.qty < 10 and self.order_type == "international":
             total = ((1 + self.tax) * self.qty * base_price) + 3
         else:
@@ -61,3 +71,19 @@ class InternationalMelonOrder(AbstractMelonOrder):
         """Return the country code."""
 
         return self.country_code
+
+
+class GovernmentMelonOrder(AbstractMelonOrder):
+    """A melon order from the government."""
+
+    def __init__(self, species, qty):
+        
+        self.passed_inspection = False
+        super().__init__(species, qty, 0, "domestic")
+    
+    def mark_inspection(self, passed):
+
+        if passed == True:
+            self.passed_inspection = True
+        else:
+            self.passed_inspection = False
